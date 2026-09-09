@@ -1,20 +1,19 @@
 import streamlit as st
 import time
-from databricks.sdk import WorkspaceClient
 
-# Inicializar cliente oficial de Databricks
-try:
-    from databricks.sdk import WorkspaceClient
-    w = WorkspaceClient()
-except Exception as e:
-    w = None
-
-# 1. Configuración de pantalla
+# 1. OBLIGATORIO: Debe ser la primerísima llamada de Streamlit
 st.set_page_config(
     page_title="SRE Incident Response - Databricks App", 
     page_icon="🚨", 
     layout="centered"
 )
+
+# 2. Inicialización segura del SDK de Databricks
+try:
+    from databricks.sdk import WorkspaceClient
+    w = WorkspaceClient()
+except Exception as e:
+    w = None
 
 # Estilos CSS oscuros y agresivos tipo centro de mando / SRE
 st.markdown("""
@@ -46,7 +45,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 2. Control de estado de la sesión
+# 3. Control de estado de la sesión
 if 'patched' not in st.session_state:
     st.session_state.patched = False
 
@@ -67,13 +66,11 @@ if not st.session_state.patched:
     st.subheader("🔑 Introduzca el puerto de emergencia (Hotfix Port):")
     st.caption("Obtenido tras la investigación en Genie y la tabla de gobernanza Unity Catalog.")
     
-    # Formulario para ingresar el puerto descubierto en el Nivel 2
     user_input = st.text_input("Puerto de Remediación (Hotfix Port):", placeholder="Ej: 8080")
     
     if st.button("🚀 DESPLEGAR PARCHE DE REMEDIACIÓN", use_container_width=True):
         if user_input.strip() == "7421":
             with st.spinner("Conectando con Databricks Workflows y aplicando parche SQL en 'sre_escape_db'..."):
-                # Simulación visual de procesamiento del parche en vivo
                 time.sleep(2.0)
             
             st.session_state.patched = True
@@ -83,7 +80,7 @@ if not st.session_state.patched:
 
 # --- ESTADO 2: INCIDENTE RESUELTO / VICTORIA (PANTALLA VERDE) ---
 else:
-    st.balloons() # Efecto de fiesta en pantalla
+    st.balloons()
     st.markdown("""
         <div class="status-card-green">
             <h1>✅ SYSTEM RECOVERED & STABILIZED</h1>

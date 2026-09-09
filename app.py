@@ -4,9 +4,10 @@ from databricks.sdk import WorkspaceClient
 
 # Inicializar cliente oficial de Databricks
 try:
+    from databricks.sdk import WorkspaceClient
     w = WorkspaceClient()
 except Exception as e:
-    st.warning("Ejecutando en modo local/demo (SDK no inicializado)")
+    w = None
 
 # 1. Configuración de pantalla
 st.set_page_config(
